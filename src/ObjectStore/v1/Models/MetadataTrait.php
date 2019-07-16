@@ -21,4 +21,17 @@ trait MetadataTrait
 
         return $metadata;
     }
-}
+    
+    public function parseExtradata(ResponseInterface $response): array
+    {
+        $extradata = [];
+
+        foreach ($response->getHeaders() as $header => $value) {
+            if (0 === strpos($header, 'X-') && 0 !== strpos($header, static::METADATA_PREFIX)) {
+                $name             = substr($header, 2);
+                $extradata[$name] = $response->getHeader($header)[0];
+            }
+        }
+
+        return $extradata;
+    }}

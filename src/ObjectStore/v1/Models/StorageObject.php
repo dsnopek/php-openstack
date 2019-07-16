@@ -44,6 +44,9 @@ class StorageObject extends OperatorResource implements Creatable, Deletable, Ha
     /** @var array */
     public $metadata;
 
+    /** @var array */
+    public $extradata;
+
     protected $markerKey = 'name';
 
     protected $aliases = [
@@ -86,6 +89,7 @@ class StorageObject extends OperatorResource implements Creatable, Deletable, Ha
         $this->lastModified  = $response->getHeaderLine('Last-Modified');
         $this->contentType   = $response->getHeaderLine('Content-Type');
         $this->metadata      = $this->parseMetadata($response);
+        $this->extradata     = $this->parseExtradata($response);
 
         return $this;
     }
@@ -183,8 +187,9 @@ class StorageObject extends OperatorResource implements Creatable, Deletable, Ha
         $options += ['name' => $this->name, 'containerName' => $this->containerName];
         $options['metadata'] = array_merge($options['metadata'] ?? [] , $this->getMetadata());
 
-        $response       = $this->execute($this->api->postObject(), $options);
-        $this->metadata = $this->parseMetadata($response);
+        $response        = $this->execute($this->api->postObject(), $options);
+        $this->metadata  = $this->parseMetadata($response);
+        $this->extradata = $this->parseExtradata($response);
     }
 
     /**
@@ -200,8 +205,9 @@ class StorageObject extends OperatorResource implements Creatable, Deletable, Ha
             'metadata'      => array_merge($metadata, $this->getMetadata()),
         ];
 
-        $response       = $this->execute($this->api->postObject(), $options);
-        $this->metadata = $this->parseMetadata($response);
+        $response        = $this->execute($this->api->postObject(), $options);
+        $this->metadata  = $this->parseMetadata($response);
+        $this->extradata = $this->parseExtradata($response);
     }
 
     /**
@@ -215,8 +221,9 @@ class StorageObject extends OperatorResource implements Creatable, Deletable, Ha
             'metadata'      => $metadata,
         ];
 
-        $response       = $this->execute($this->api->postObject(), $options);
-        $this->metadata = $this->parseMetadata($response);
+        $response        = $this->execute($this->api->postObject(), $options);
+        $this->metadata  = $this->parseMetadata($response);
+        $this->extradata = $this->parseExtradata($response);
     }
 
     /**
